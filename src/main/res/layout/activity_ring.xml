@@ -6,7 +6,8 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
-                tools:context=".RingActivity">
+                tools:context=".RingActivity"
+                android:background="#000000">
 
     <TextView
             android:text="WAKE UP"
@@ -16,7 +17,8 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="26dp"
-            android:id="@+id/textView2"/>
+            android:id="@+id/textView2"
+            android:textColor="#dddddd"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -24,9 +26,9 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Information"
             android:id="@+id/infoTxt"
-            android:layout_below="@+id/textView2"
+            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="102dp"/>
+            android:textColor="#aaaaaa"/>
 
     <Button
             android:layout_width="match_parent"
@@ -36,5 +38,15 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="95dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/message"
+            android:layout_below="@+id/textView2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="22dp"
+            android:textColor="#dddddd"/>
 
 </RelativeLayout>

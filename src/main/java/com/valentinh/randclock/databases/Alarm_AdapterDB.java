@@ -3,6 +3,8 @@ package com.valentinh.randclock.databases;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Debug;
+import android.util.Log;
 
 import com.valentinh.randclock.model.Alarm;
 
@@ -21,6 +23,7 @@ public class Alarm_AdapterDB extends AbstractAdapterDB
     public static final String KEY_HOUR = "hour";
     public static final String KEY_MINUTE = "minute";
     public static final String KEY_REPEAT = "repeat";
+    public static final String KEY_ENABLED = "enabled";
 
     public Alarm_AdapterDB(Context ctx)
     {
@@ -33,7 +36,8 @@ public class Alarm_AdapterDB extends AbstractAdapterDB
         args.put(KEY_TITLE, ac.getTitle());
         args.put(KEY_HOUR, ac.getHour());
         args.put(KEY_MINUTE, ac.getMinute());
-        args.put(KEY_REPEAT, ac.isRepeat());
+        args.put(KEY_REPEAT, ac.getRepeat());
+        args.put(KEY_ENABLED, ac.getEnabled());
 
         return db.insert(DATABASE_TABLE, null, args);
     }
@@ -44,7 +48,8 @@ public class Alarm_AdapterDB extends AbstractAdapterDB
         args.put(KEY_TITLE, ac.getTitle());
         args.put(KEY_HOUR, ac.getHour());
         args.put(KEY_MINUTE, ac.getMinute());
-        args.put(KEY_REPEAT, ac.isRepeat());
+        args.put(KEY_REPEAT, ac.getRepeat());
+        args.put(KEY_ENABLED, ac.getEnabled());
 
         return db.update(DATABASE_TABLE, args, KEY_ROWID + "= " + id, null);
     }
@@ -56,7 +61,7 @@ public class Alarm_AdapterDB extends AbstractAdapterDB
 
     public Alarm getOne(long rowId)
     {
-        Cursor c = db.query(DATABASE_TABLE, new String[]{KEY_ROWID, KEY_TITLE, KEY_HOUR, KEY_MINUTE, KEY_REPEAT}, KEY_ROWID + "=" + rowId, null, null, null, null);
+        Cursor c = db.query(DATABASE_TABLE, new String[]{KEY_ROWID, KEY_TITLE, KEY_HOUR, KEY_MINUTE, KEY_REPEAT, KEY_ENABLED}, KEY_ROWID + "=" + rowId, null, null, null, null);
 
         if( c.getCount() == 0)
         {
@@ -72,13 +77,14 @@ public class Alarm_AdapterDB extends AbstractAdapterDB
         ac.setHour(c.getInt(c.getColumnIndex(KEY_HOUR)));
         ac.setMinute(c.getInt(c.getColumnIndex(KEY_MINUTE)));
         ac.setRepeat(c.getInt(c.getColumnIndex(KEY_REPEAT)));
+        ac.setEnabled(c.getInt(c.getColumnIndex(KEY_ENABLED)));
         c.close();
         return ac;
     }
 
     public ArrayList<Alarm> getAll()
     {
-        Cursor c = db.query(DATABASE_TABLE, new String[]{KEY_ROWID, KEY_TITLE, KEY_HOUR, KEY_MINUTE, KEY_REPEAT}, null, null, null, null, null);
+        Cursor c = db.query(DATABASE_TABLE, new String[]{KEY_ROWID, KEY_TITLE, KEY_HOUR, KEY_MINUTE, KEY_REPEAT, KEY_ENABLED}, null, null, null, null, null);
 
         if( c.getCount() == 0)
         {
@@ -95,6 +101,7 @@ public class Alarm_AdapterDB extends AbstractAdapterDB
             ac.setHour(c.getInt(c.getColumnIndex(KEY_HOUR)));
             ac.setMinute(c.getInt(c.getColumnIndex(KEY_MINUTE)));
             ac.setRepeat(c.getInt(c.getColumnIndex(KEY_REPEAT)));
+            ac.setEnabled(c.getInt(c.getColumnIndex(KEY_ENABLED)));
             acs.add(ac);
         }while(c.moveToNext());
 

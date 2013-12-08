@@ -23,7 +23,8 @@ public class BaseOpenHelper extends SQLiteOpenHelper
     {
         /*####### DONNEES ####### */
         //TABLES
-        db.execSQL("CREATE TABLE alarms( id INTEGER PRIMARY KEY, title TEXT, hour INTEGER, minute INTEGER, repeat INTEGER);");
+        db.execSQL("CREATE TABLE alarms( "+Alarm_AdapterDB.KEY_ROWID+" INTEGER PRIMARY KEY, "+Alarm_AdapterDB.KEY_TITLE+" TEXT, "+Alarm_AdapterDB.KEY_HOUR+" INTEGER," +
+                Alarm_AdapterDB.KEY_MINUTE+" INTEGER, "+Alarm_AdapterDB.KEY_REPEAT+" INTEGER, "+Alarm_AdapterDB.KEY_ENABLED+" INTEGER);");
 
     }
 

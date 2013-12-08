@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.valentinh.randclock.broadcastReceivers.AlarmReceiver;
 import com.valentinh.randclock.RandClock;
@@ -81,8 +82,9 @@ public class AlarmService extends IntentService
     {
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this, AlarmReceiver.class);
-        i.putExtra("id", a.getId());
+        i.putExtra(ALARM_ID, a.getId());
 
+        Log.i("ALARM SET", getMillis(a)+"");
         PendingIntent pi = PendingIntent.getBroadcast(this, (int) a.getId(), i, PendingIntent.FLAG_UPDATE_CURRENT);
         if (a.isRepeat())
             am.setRepeating(AlarmManager.RTC_WAKEUP, getMillis(a), 24 * 3600 * 1000, pi);
@@ -95,7 +97,6 @@ public class AlarmService extends IntentService
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this, AlarmReceiver.class);
         i.putExtra("id", a.getId());
-
         PendingIntent pi = PendingIntent.getBroadcast(this, (int) a.getId(), i, PendingIntent.FLAG_UPDATE_CURRENT);
         am.cancel(pi);
     }
@@ -111,7 +112,7 @@ public class AlarmService extends IntentService
         c.set(Calendar.HOUR_OF_DAY, a.getHour());
         c.set(Calendar.MINUTE, a.getMinute());
 
-        if (current > c.getTimeInMillis())
+        if (current >= c.getTimeInMillis())
             c.add(Calendar.DAY_OF_YEAR, 1);
 
         return c.getTimeInMillis();

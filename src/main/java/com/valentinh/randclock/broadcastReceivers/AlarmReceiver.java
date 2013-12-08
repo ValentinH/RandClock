@@ -6,8 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
+import android.util.Log;
 
 import com.valentinh.randclock.activities.RingActivity;
+import com.valentinh.randclock.services.AlarmService;
 
 public class AlarmReceiver extends BroadcastReceiver
 {
@@ -21,8 +23,10 @@ public class AlarmReceiver extends BroadcastReceiver
         wl.acquire();
 
         //start RingActivity
+        long id = intent.getLongExtra(AlarmService.ALARM_ID, -1);
         Intent newIntent = new Intent(context, RingActivity.class);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        newIntent.putExtra(AlarmService.ALARM_ID, id);
         context.startActivity(newIntent);
 
         //Release the lock

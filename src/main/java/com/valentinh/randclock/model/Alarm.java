@@ -11,6 +11,7 @@ public class Alarm
     private int hour;
     private int minute;
     private boolean repeat;
+    private boolean enabled;
 
     public Alarm()
     {
@@ -22,6 +23,7 @@ public class Alarm
         this.hour = hour;
         this.minute = minute;
         this.repeat = repeat;
+        this.enabled = true;
     }
 
     public long getId()
@@ -68,13 +70,44 @@ public class Alarm
     {
         return repeat;
     }
+    public int getRepeat()
+    {
+       return repeat ? 1 : 0;
+    }
 
     public void setRepeat(boolean repeat)
     {
         this.repeat = repeat;
     }
-    public void setRepeat(int repeat)
+    public void setRepeat(int r)
     {
-        this.repeat = (repeat == 1);
+        this.repeat = (r == 1);
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+    public int getEnabled()
+    {
+        return enabled ? 1 : 0;
+    }
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
+    }
+    public void setEnabled(int e)
+    {
+        this.enabled = (e == 1);
+    }
+
+    @Override
+    public String toString()
+    {
+        String sHour = hour + "";
+        if(hour<10) sHour = "0"+hour;
+        String sMinute = minute + "";
+        if(minute<10) sMinute = "0"+minute;
+        return  sHour +":" + sMinute;
     }
 }

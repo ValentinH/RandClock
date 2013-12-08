@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="100dp"
+              android:id="@+id/back"
+              android:padding="5dp">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="16:23"
+            android:id="@+id/timeTxt"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:textSize="30sp"
+            android:textStyle="bold"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="repeat"
+            android:id="@+id/repeatTxt"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:textColor="#666666"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Un superbe texte"
+            android:id="@+id/messageView"
+            android:layout_toRightOf="@+id/timeTxt"
+            android:layout_below="@+id/timeTxt"
+            android:layout_alignBottom="@+id/repeatTxt"
+            android:layout_alignRight="@+id/enableSwitch"/>
+
+    <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/enableSwitch"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"/>
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/deleteButton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/enableSwitch"
+            android:src="@android:drawable/ic_menu_delete"
+            android:background="@android:color/transparent"/>
+
+</RelativeLayout>

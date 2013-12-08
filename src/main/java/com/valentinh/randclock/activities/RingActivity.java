@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.valentinh.randclock.R;
+import com.valentinh.randclock.databases.Alarm_AdapterDB;
+import com.valentinh.randclock.model.Alarm;
+import com.valentinh.randclock.services.AlarmService;
 
 import java.io.IOException;
 import java.util.Random;
@@ -22,28 +25,35 @@ public class RingActivity extends Activity
 
     Button stopBtn;
     TextView infoTxt;
+    TextView messageTxt;
 
     MediaPlayer player;
     Vibrator vibrator;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring);
 
-
+        long alarm_id = getIntent().getLongExtra(AlarmService.ALARM_ID, -1);
         stopBtn = (Button) findViewById(R.id.stopButton);
         stopBtn.setOnClickListener(new StopListener());
         infoTxt = (TextView) findViewById(R.id.infoTxt);
+        messageTxt = (TextView) findViewById(R.id.message);
 
 
-        if(savedInstanceState == null)
+        if (savedInstanceState == null)
         {
-            SongInfo song = getSong();
-            if(song != null)
+            Alarm al = getAlarm(alarm_id);
+            if (al != null)
             {
-                infoTxt.setText(song.title+" - "+song.artist);
-
+                messageTxt.setText(al.getTitle());
+            }
+            SongInfo song = getSong();
+            if (song != null)
+            {
+                infoTxt.setText(song.title + " - " + song.artist);
                 player = new MediaPlayer();
                 player.setLooping(true);
                 try
@@ -56,12 +66,28 @@ public class RingActivity extends Activity
                     e.printStackTrace();
                 }
 
-                vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                // Vibrate for 500 milliseconds
-                long[] pattern = {0, 500, 500};
-                vibrator.vibrate(pattern, 0);
             }
+
+            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            long[] pattern = {0, 500, 500};
+            vibrator.vibrate(pattern, 0);
         }
+    }
+
+    protected Alarm getAlarm(long id)
+    {
+        Alarm_AdapterDB adapt = new Alarm_AdapterDB(getApplicationContext());
+        adapt.open();
+        Alarm al = adapt.getOne(id);
+        if (al != null && !al.isRepeat())
+        {
+            al.setEnabled(false);
+            adapt.update(al.getId(), al);
+        }
+        adapt.close();
+
+        return al;
     }
 
     protected SongInfo getSong()
@@ -85,7 +111,7 @@ public class RingActivity extends Activity
         Random r = new Random();
         int pos = r.nextInt(total);
         cursor.moveToPosition(pos);
-        if(cursor.isNull(3))
+        if (cursor.isNull(3))
             return null;
 
         return new SongInfo(cursor.getString(1), cursor.getString(2), cursor.getString(3));
@@ -110,14 +136,25 @@ public class RingActivity extends Activity
         @Override
         public void onClick(View v)
         {
-            if(player!=null && player.isPlaying())
+            if (player != null && player.isPlaying())
             {
                 player.stop();
                 player.release();
             }
-            if(vibrator != null)
+            if (vibrator != null)
                 vibrator.cancel();
             finish();
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        if (player != null)
+        {
+            player.release();
+            player = null;
         }
     }
 }
