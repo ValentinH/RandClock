@@ -80,12 +80,10 @@ public class AlarmService extends IntentService
 
     private void setAlarm(Alarm a)
     {
-        Log.i("SET ALARM", a.toString());
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this, AlarmReceiver.class);
         i.putExtra(ALARM_ID, a.getId());
 
-        Log.i("ALARM SET", getMillis(a)+"");
         PendingIntent pi = PendingIntent.getBroadcast(this, (int) a.getId(), i, PendingIntent.FLAG_UPDATE_CURRENT);
         if (a.isRepeat())
             am.setRepeating(AlarmManager.RTC_WAKEUP, getMillis(a), 24 * 3600 * 1000, pi);

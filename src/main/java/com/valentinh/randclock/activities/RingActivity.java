@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -60,16 +61,26 @@ public class RingActivity extends Activity
                 {
                     player.setDataSource(song.path);
                     player.prepare();
-                    player.start();
                 } catch (IOException e)
                 {
                     e.printStackTrace();
                 }
-
             }
-
             vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            // Vibrate for 500 milliseconds
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if (player != null && !player.isPlaying())
+        {
+            player.start();
+        }
+        if (vibrator != null)
+        {
+            //Vibrate for 500 milliseconds
             long[] pattern = {0, 500, 500};
             vibrator.vibrate(pattern, 0);
         }
@@ -136,13 +147,6 @@ public class RingActivity extends Activity
         @Override
         public void onClick(View v)
         {
-            if (player != null && player.isPlaying())
-            {
-                player.stop();
-                player.release();
-            }
-            if (vibrator != null)
-                vibrator.cancel();
             finish();
         }
     }
@@ -151,10 +155,24 @@ public class RingActivity extends Activity
     public void onPause()
     {
         super.onPause();
-        if (player != null)
+        if (player != null && player.isPlaying())
+        {
+            player.pause();
+        }
+        if (vibrator != null)
+            vibrator.cancel();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        if (player != null && player.isPlaying())
         {
             player.release();
             player = null;
         }
+        if (vibrator != null)
+            vibrator.cancel();
     }
 }
