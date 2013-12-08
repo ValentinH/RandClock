@@ -80,6 +80,7 @@ public class AlarmService extends IntentService
 
     private void setAlarm(Alarm a)
     {
+        Log.i("SET ALARM", a.toString());
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this, AlarmReceiver.class);
         i.putExtra(ALARM_ID, a.getId());
