@@ -15,7 +15,7 @@
                 android:id="@+id/settingsButton"
                 android:src="@android:drawable/ic_menu_preferences"
                 android:background="@android:color/transparent"
-                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"/>
 

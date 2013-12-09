@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.android.datetimepicker.time.RadialPickerLayout;
 import com.valentinh.randclock.R;
 import com.valentinh.randclock.databases.Alarm_AdapterDB;
+import com.valentinh.randclock.listeners.SwipeDismissListViewTouchListener;
 import com.valentinh.randclock.model.Alarm;
 import com.valentinh.randclock.services.AlarmService;
 
@@ -172,7 +173,8 @@ public class MainActivity extends Activity
         @Override
         public void onClick(View v)
         {
-
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
         }
     }
 

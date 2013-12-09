@@ -7,7 +7,10 @@
                             android:title="Vibrate"
                             android:summary="Vibrate on alarm"
                             android:defaultValue="true" />
-
+        <com.valentinh.randclock.preferences.AlarmVolumePreference
+                android:defaultValue="4"
+                android:max="7"
+                android:title="Volume" />
     </PreferenceCategory>
 
 </PreferenceScreen>

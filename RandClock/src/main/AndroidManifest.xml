@@ -36,10 +36,13 @@
         </receiver>
         <service android:name=".services.AlarmService"> </service>
         <activity
-            android:name=".activities.RingActivity"
-            android:label="@string/title_activity_ring"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait">
+                android:name=".activities.RingActivity"
+                android:label="@string/title_activity_ring"
+                android:excludeFromRecents="true"
+                android:screenOrientation="portrait">
+        </activity>
+        <activity
+                android:name=".activities.SettingsActivity">
         </activity>
     </application>
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.valentinh.randclock.activities;
+package com.valentinh.randclock.listeners;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

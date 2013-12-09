@@ -2,12 +2,14 @@ package com.valentinh.randclock.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +33,9 @@ public class RingActivity extends Activity
 
     MediaPlayer player;
     Vibrator vibrator;
+    boolean vibrate;
+
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,6 +43,9 @@ public class RingActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring);
         setVolumeControlStream(AudioManager.STREAM_ALARM);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        vibrate = prefs.getBoolean("vibrate_pref", false);
 
         long alarm_id = getIntent().getLongExtra(AlarmService.ALARM_ID, -1);
         stopBtn = (Button) findViewById(R.id.stopButton);
@@ -69,7 +77,8 @@ public class RingActivity extends Activity
                     e.printStackTrace();
                 }
             }
-            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            if(vibrate)
+                vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         }
     }
 
@@ -81,7 +90,7 @@ public class RingActivity extends Activity
         {
             player.start();
         }
-        if (vibrator != null)
+        if (vibrate && vibrator != null)
         {
             //Vibrate for 500 milliseconds
             long[] pattern = {0, 500, 500};
@@ -175,7 +184,7 @@ public class RingActivity extends Activity
             player.release();
             player = null;
         }
-        if (vibrator != null)
+        if (vibrate && vibrator != null)
             vibrator.cancel();
     }
 }
