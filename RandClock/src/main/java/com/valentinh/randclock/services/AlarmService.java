@@ -61,20 +61,17 @@ public class AlarmService extends IntentService
             {
                 setAlarm(a);
             }
-        } else
+        } else if (CREATE.equals(action))
         {
             Alarm a = adapt.getOne(alarmId);
             if (a != null)
-            {
-                if (CREATE.equals(action))
-                {
-                   setAlarm(a);
-                } else if (CANCEL.equals(action))
-                {
-                    cancelAlarm(a);
-                }
-            }
+                setAlarm(a);
         }
+        else
+        {
+            cancelAlarm((int)alarmId);
+        }
+
         adapt.close();
     }
 
@@ -91,12 +88,11 @@ public class AlarmService extends IntentService
             am.set(AlarmManager.RTC_WAKEUP, getMillis(a), pi);
     }
 
-    private void cancelAlarm(Alarm a)
+    private void cancelAlarm(int id)
     {
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this, AlarmReceiver.class);
-        i.putExtra("id", a.getId());
-        PendingIntent pi = PendingIntent.getBroadcast(this, (int) a.getId(), i, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(this, id, i, PendingIntent.FLAG_UPDATE_CURRENT);
         am.cancel(pi);
     }
 

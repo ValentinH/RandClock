@@ -56,6 +56,26 @@ public class MainActivity extends Activity
         addButton.setOnClickListener(new AddListener());
         settingsButton.setOnClickListener(new SettingsListener());
 
+        SwipeDismissListViewTouchListener touchListener =
+                new SwipeDismissListViewTouchListener(
+                        listView,
+                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                    Alarm a = adapter.getItem(position);
+                                    deleteAlarm(a);
+                                }
+                            }
+                        });
+        listView.setOnTouchListener(touchListener);
+        listView.setOnScrollListener(touchListener.makeScrollListener());
+
     }
 
     private void refreshAlarmsList()
@@ -82,11 +102,15 @@ public class MainActivity extends Activity
 
     private void deleteAlarm(Alarm al)
     {
+        Intent service = new Intent(this, AlarmService.class);
+        service.setAction(AlarmService.CANCEL);
+        service.putExtra(AlarmService.ALARM_ID, al.getId());
+        this.startService(service);
+
         Alarm_AdapterDB adapt = new Alarm_AdapterDB(getApplicationContext());
         adapt.open();
         adapt.delete(al.getId());
         adapt.close();
-        activateAlarm(al, false);
         adapter.remove(al);
         adapter.notifyDataSetChanged();
     }
@@ -140,7 +164,6 @@ public class MainActivity extends Activity
                 }
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
            tpd.show(MainActivity.this.getFragmentManager(), null);
-
         }
     }
 
