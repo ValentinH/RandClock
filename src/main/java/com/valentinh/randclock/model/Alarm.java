@@ -17,12 +17,12 @@ public class Alarm
     {
     }
 
-    public Alarm(String title, int hour, int minute, boolean repeat)
+    public Alarm(int hour, int minute)
     {
-        this.title = title;
+        this.title = "";
         this.hour = hour;
         this.minute = minute;
-        this.repeat = repeat;
+        this.repeat = false;
         this.enabled = true;
     }
 

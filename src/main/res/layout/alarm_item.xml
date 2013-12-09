@@ -2,9 +2,9 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="100dp"
+              android:layout_height="120dp"
               android:id="@+id/back"
-              android:padding="5dp">
+              android:padding="10dp">
 
     <TextView
             android:layout_width="wrap_content"
@@ -16,27 +16,6 @@
             android:layout_alignParentLeft="true"
             android:textSize="30sp"
             android:textStyle="bold"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="repeat"
-            android:id="@+id/repeatTxt"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:textColor="#666666"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Un superbe texte"
-            android:id="@+id/messageView"
-            android:layout_toRightOf="@+id/timeTxt"
-            android:layout_below="@+id/timeTxt"
-            android:layout_alignBottom="@+id/repeatTxt"
-            android:layout_alignRight="@+id/enableSwitch"/>
 
     <Switch
             android:layout_width="wrap_content"
@@ -53,5 +32,38 @@
             android:layout_alignRight="@+id/enableSwitch"
             android:src="@android:drawable/ic_menu_delete"
             android:background="@android:color/transparent"/>
+
+    <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REPEAT"
+            android:id="@+id/repeatCheckBox"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="false"
+            android:textColor="#666666"
+            android:textSize="12sp"/>
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/enableSwitch"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/deleteButton"
+            android:padding="5dp"
+            android:layout_toRightOf="@+id/timeTxt">
+
+        <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/messageButton"
+                android:layout_alignParentLeft="true"
+                android:gravity="center_vertical|left"
+                android:hint="message"
+                android:background="@drawable/text_button"
+                android:minHeight="26dp"/>
+    </RelativeLayout>
 
 </RelativeLayout>

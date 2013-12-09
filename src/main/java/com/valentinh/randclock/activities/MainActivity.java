@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -63,9 +65,9 @@ public class MainActivity extends Activity
         adapt.close();
     }
 
-    protected void addAlarm(int hour, int minute, String message, boolean repeat)
+    protected void addAlarm(int hour, int minute)
     {
-        Alarm al = new Alarm(message, hour, minute, false);
+        Alarm al = new Alarm(hour, minute);
         Alarm_AdapterDB adapt = new Alarm_AdapterDB(getApplicationContext());
         adapt.open();
         al.setId(adapt.create(al));
@@ -95,7 +97,10 @@ public class MainActivity extends Activity
             service.setAction(AlarmService.CREATE);
             service.putExtra(AlarmService.ALARM_ID, a.getId());
             this.startService(service);
-            Toast.makeText(this, "Alarm set for " + a.toString(), Toast.LENGTH_SHORT).show();
+            String s = "single alarm set for " + a.toString();
+            if (a.isRepeat())
+                s = "repeating alarm set for " + a.toString();
+            Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
         } else
         {
             Intent service = new Intent(this, AlarmService.class);
@@ -104,6 +109,11 @@ public class MainActivity extends Activity
             this.startService(service);
         }
         a.setEnabled(activated);
+        updateAlarmModel(a);
+    }
+
+    protected void updateAlarmModel(Alarm a)
+    {
         Alarm_AdapterDB adapt = new Alarm_AdapterDB(getApplicationContext());
         adapt.open();
         adapt.update(a.getId(), a);
@@ -123,8 +133,6 @@ public class MainActivity extends Activity
 
             final TimePicker tp = (TimePicker) contentView.findViewById(R.id.timePicker);
             tp.setIs24HourView(true);
-            final CheckBox repeatCheckbox = (CheckBox) contentView.findViewById(R.id.repeatCheckbox);
-            final EditText messageText = (EditText) contentView.findViewById(R.id.message);
 
             builder.setView(contentView);
             builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener()
@@ -132,8 +140,7 @@ public class MainActivity extends Activity
                 @Override
                 public void onClick(DialogInterface dialog, int which)
                 {
-                    boolean repeat = repeatCheckbox.isChecked();
-                    addAlarm(tp.getCurrentHour(), tp.getCurrentMinute(), messageText.getText().toString(), repeat);
+                    addAlarm(tp.getCurrentHour(), tp.getCurrentMinute());
                 }
             });
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
@@ -202,8 +209,53 @@ public class MainActivity extends Activity
                 holder = new ViewHolder();
                 holder.back = (RelativeLayout) convertView.findViewById(R.id.back);
                 holder.time = (TextView) convertView.findViewById(R.id.timeTxt);
-                holder.repeat = (TextView) convertView.findViewById(R.id.repeatTxt);
-                holder.message = (TextView) convertView.findViewById(R.id.messageView);
+                holder.repeat = (CheckBox) convertView.findViewById(R.id.repeatCheckBox);
+                holder.repeat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+                {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                    {
+                        if (switchEnabled)
+                        {
+                            Alarm a = listAlarms.get((Integer) buttonView.getTag());
+                            a.setRepeat(buttonView.isChecked());
+                            activateAlarm(a, a.isEnabled());
+                        }
+                    }
+                });
+                holder.message = (Button) convertView.findViewById(R.id.messageButton);
+                holder.message.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        final Alarm a = listAlarms.get((Integer) v.getTag());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        final EditText input = new EditText(MainActivity.this);
+                        input.setText(a.getTitle());
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int whichButton)
+                            {
+                                String value = input.getText().toString();
+                                a.setTitle(value);
+                                updateAlarmModel(a);
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int whichButton)
+                            {
+                                // Canceled.
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.setTitle("Message");
+                        dialog.setView(input);
+                        dialog.show();
+                        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    }
+                });
                 holder.switchView = (Switch) convertView.findViewById(R.id.enableSwitch);
                 holder.switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
                 {
@@ -217,7 +269,7 @@ public class MainActivity extends Activity
                             {
                                 activateAlarm(a, isChecked);
                                 View parent = (View) v.getParent();
-                                setHolderColors((ViewHolder) parent.getTag(),isChecked);
+                                setHolderColors((ViewHolder) parent.getTag(), isChecked);
                             }
                         }
                     }
@@ -236,22 +288,19 @@ public class MainActivity extends Activity
                     }
                 });
                 convertView.setTag(holder);
-            }
-            else
+            } else
             {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.message.setText(al.getTitle());
             holder.time.setText(al.toString());
-            if (al.isRepeat())
-                holder.repeat.setText("repeat");
-            else
-                holder.repeat.setText("");
-
+            holder.message.setText(al.getTitle());
+            holder.repeat.setChecked(al.isRepeat());
             holder.switchView.setChecked(al.isEnabled());
             holder.switchView.setTag(position);
             holder.deleteButton.setTag(position);
+            holder.repeat.setTag(position);
+            holder.message.setTag(position);
 
             setHolderColors(holder, al.isEnabled());
 
@@ -261,27 +310,26 @@ public class MainActivity extends Activity
 
         protected void setHolderColors(ViewHolder holder, boolean enabled)
         {
-            if(enabled)
+            if (enabled)
             {
-                holder.time.setTextColor(Color.parseColor("#000000"));
-                holder.message.setTextColor(Color.parseColor("#333333"));
-                holder.repeat.setTextColor(Color.parseColor("#666666"));
-                holder.back.setBackgroundColor(Color.parseColor("#ffffff"));
-            }
-            else
+                holder.time.setTextColor(getResources().getColor(R.color.list_time));
+                holder.message.setTextColor(getResources().getColor(R.color.list_message));
+                holder.repeat.setTextColor(getResources().getColor(R.color.list_repeat));
+                holder.back.setBackgroundColor(getResources().getColor(R.color.list_background));
+            } else
             {
-                holder.time.setTextColor(Color.parseColor("#333333"));
-                holder.message.setTextColor(Color.parseColor("#666666"));
-                holder.repeat.setTextColor(Color.parseColor("#999999"));
-                holder.back.setBackgroundColor(Color.parseColor("#cccccc"));
+                holder.time.setTextColor(getResources().getColor(R.color.list_time_disable));
+                holder.message.setTextColor(getResources().getColor(R.color.list_message_disable));
+                holder.repeat.setTextColor(getResources().getColor(R.color.list_repeat_disable));
+                holder.back.setBackgroundColor(getResources().getColor(R.color.list_background_disable));
             }
         }
 
         class ViewHolder
         {
             TextView time;
-            TextView repeat;
-            TextView message;
+            CheckBox repeat;
+            Button message;
             Switch switchView;
             ImageButton deleteButton;
             RelativeLayout back;

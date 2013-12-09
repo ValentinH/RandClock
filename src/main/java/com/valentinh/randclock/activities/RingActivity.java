@@ -3,6 +3,7 @@ package com.valentinh.randclock.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class RingActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring);
+        setVolumeControlStream(AudioManager.STREAM_ALARM);
 
         long alarm_id = getIntent().getLongExtra(AlarmService.ALARM_ID, -1);
         stopBtn = (Button) findViewById(R.id.stopButton);
@@ -56,6 +58,7 @@ public class RingActivity extends Activity
             {
                 infoTxt.setText(song.title + " - " + song.artist);
                 player = new MediaPlayer();
+                player.setAudioStreamType(AudioManager.STREAM_ALARM);
                 player.setLooping(true);
                 try
                 {

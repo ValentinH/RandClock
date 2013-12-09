@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="list_time">#000000</color>
+    <color name="list_message">#333333</color>
+    <color name="list_repeat">#666666</color>
+    <color name="list_background">#ffffff</color>
+    <color name="list_time_disable">#333333</color>
+    <color name="list_message_disable">#666666</color>
+    <color name="list_repeat_disable">#999999</color>
+    <color name="list_background_disable">#cccccc</color>
+    <color name="text_button_hover">#dddddd</color>
+</resources>
