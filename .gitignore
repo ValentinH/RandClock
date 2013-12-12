@@ -1,3 +1,5 @@
 /RandClock/build
 /.idea
 /.gradle
+*.psd
+*.apk

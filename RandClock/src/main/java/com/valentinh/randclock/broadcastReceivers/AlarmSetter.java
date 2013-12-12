@@ -11,7 +11,6 @@ public class AlarmSetter extends BroadcastReceiver
 {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i("ON RECEIVE", "ok");
         Intent service = new Intent(context, AlarmService.class);
         service.setAction(AlarmService.RESET_ALL);
         context.startService(service);

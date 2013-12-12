@@ -1,7 +1,11 @@
 package com.valentinh.randclock.activities;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -13,6 +17,8 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -26,6 +32,11 @@ import java.util.Random;
 
 public class RingActivity extends Activity
 {
+
+    public static final int ID_NOTIF = 1;
+    private NotificationManager mNotifyManager;
+    private Notification.Builder mBuilder;
+    private Notification notif;
 
     Button stopBtn;
     TextView infoTxt;
@@ -41,6 +52,11 @@ public class RingActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         setContentView(R.layout.activity_ring);
         setVolumeControlStream(AudioManager.STREAM_ALARM);
 
@@ -77,9 +93,36 @@ public class RingActivity extends Activity
                     e.printStackTrace();
                 }
             }
-            if(vibrate)
+            if (vibrate)
                 vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+            showNotification();
         }
+    }
+
+    private void showNotification()
+    {
+        mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new Notification.Builder(this);
+        Intent toLaunch = new Intent(getApplicationContext(), RingActivity.class);
+        PendingIntent intentBack = PendingIntent.getActivity(this, 0, toLaunch, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentTitle(getResources().getString(R.string.app_name))
+                .setContentText(getResources().getString(R.string.alarm_ringing))
+                .setSmallIcon(R.drawable.notif)
+                .setContentIntent(intentBack);
+        notif = mBuilder.build();
+        mNotifyManager.notify(ID_NOTIF, notif);
+    }
+
+    private void deleteNotification()
+    {
+        mNotifyManager.cancelAll();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        //disable back button
     }
 
     @Override
@@ -128,7 +171,8 @@ public class RingActivity extends Activity
         Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
-        Cursor cursor = managedQuery(allsongsuri, projection, selection, null, null);
+        Cursor cursor = getContentResolver().query(allsongsuri, projection, selection, null, null);
+        if(cursor == null) return null;
 
         int total = cursor.getCount();
         Random r = new Random();
@@ -164,18 +208,6 @@ public class RingActivity extends Activity
     }
 
     @Override
-    public void onPause()
-    {
-        super.onPause();
-        if (player != null && player.isPlaying())
-        {
-            player.pause();
-        }
-        if (vibrator != null)
-            vibrator.cancel();
-    }
-
-    @Override
     public void onDestroy()
     {
         super.onDestroy();
@@ -186,5 +218,6 @@ public class RingActivity extends Activity
         }
         if (vibrate && vibrator != null)
             vibrator.cancel();
+        deleteNotification();
     }
 }
