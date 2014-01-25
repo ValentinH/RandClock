@@ -171,10 +171,11 @@ public class RingActivity extends Activity
         Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
-        Cursor cursor = getContentResolver().query(allsongsuri, projection, selection, null, null);
+        Cursor cursor = managedQuery(allsongsuri, projection, selection, null, null);
         if(cursor == null) return null;
 
         int total = cursor.getCount();
+        if(total == 0) return null;
         Random r = new Random();
         int pos = r.nextInt(total);
         cursor.moveToPosition(pos);
