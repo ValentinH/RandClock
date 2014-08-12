@@ -1,12 +1,9 @@
 package com.valentinh.randclock.broadcastReceivers;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
-import android.util.Log;
 
 import com.valentinh.randclock.activities.RingActivity;
 import com.valentinh.randclock.services.AlarmService;

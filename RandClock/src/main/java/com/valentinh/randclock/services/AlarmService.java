@@ -6,12 +6,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.valentinh.randclock.broadcastReceivers.AlarmReceiver;
 import com.valentinh.randclock.RandClock;
+import com.valentinh.randclock.broadcastReceivers.AlarmReceiver;
 import com.valentinh.randclock.databases.Alarm_AdapterDB;
 import com.valentinh.randclock.model.Alarm;
 
@@ -77,6 +74,8 @@ public class AlarmService extends IntentService
 
     private void setAlarm(Alarm a)
     {
+        if(!a.isEnabled())
+            return;
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this, AlarmReceiver.class);
         i.putExtra(ALARM_ID, a.getId());

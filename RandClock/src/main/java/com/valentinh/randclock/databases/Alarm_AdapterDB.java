@@ -3,8 +3,6 @@ package com.valentinh.randclock.databases;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Debug;
-import android.util.Log;
 
 import com.valentinh.randclock.model.Alarm;
 

@@ -1,6 +1,5 @@
 package com.valentinh.randclock.preferences;
 
-import android.app.AlarmManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.media.AudioManager;
@@ -8,11 +7,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 
 import com.valentinh.randclock.R;
 

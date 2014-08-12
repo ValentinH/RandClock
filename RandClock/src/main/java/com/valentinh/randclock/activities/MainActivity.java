@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.datetimepicker.time.RadialPickerLayout;
+import com.android.datetimepicker.time.TimePickerDialog;
 import com.valentinh.randclock.R;
 import com.valentinh.randclock.databases.Alarm_AdapterDB;
 import com.valentinh.randclock.listeners.SwipeDismissListViewTouchListener;
@@ -31,8 +32,6 @@ import com.valentinh.randclock.services.AlarmService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import com.android.datetimepicker.time.TimePickerDialog;
 
 
 public class MainActivity extends Activity

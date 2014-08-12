@@ -19,7 +19,6 @@ package com.android.datetimepicker.date;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.StateListDrawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
@@ -30,7 +29,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.datetimepicker.R;
-import com.android.datetimepicker.Utils;
 import com.android.datetimepicker.date.DatePickerDialog.OnDateChangedListener;
 
 import java.util.ArrayList;

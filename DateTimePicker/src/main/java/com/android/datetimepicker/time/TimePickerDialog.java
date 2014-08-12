@@ -21,7 +21,6 @@ import android.app.ActionBar.LayoutParams;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
